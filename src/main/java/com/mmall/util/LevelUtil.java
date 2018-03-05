@@ -2,6 +2,9 @@ package com.mmall.util;
 
 import org.apache.commons.lang3.StringUtils;
 
+/**
+ * 计算层级工具类
+ */
 public class LevelUtil {
     public final static String SEPARATOR = ".";
     public final static String ROOT = "0";

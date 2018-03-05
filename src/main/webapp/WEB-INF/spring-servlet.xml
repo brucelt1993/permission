@@ -7,13 +7,14 @@
     <context:annotation-config/>
     <!--启动注解驱动的springmvc功能 -->
     <mvc:annotation-driven/>
+    <!--启用spring mvc请求拦截-->
     <mvc:interceptors>
         <bean class="com.mmall.common.HttpInterceptor"/>
     </mvc:interceptors>
     <!--启用包扫描 -->
     <context:component-scan base-package="com.mmall.controller"/>
     <context:component-scan base-package="com.mmall.service"/>
-
+    <!--允许加载的静态资源-->
     <mvc:resources location="/js/" mapping="/js/**"/>
     <mvc:resources location="/css/" mapping="/css/**"/>
     <mvc:resources location="/bootstrap3.3.5/" mapping="/bootstrap3.3.5/**"/>
@@ -21,9 +22,13 @@
 
     <bean class="com.mmall.common.ApplicationContextHelper" lazy-init="false"/>
     <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"/>
+    <!--启用spring mvc的全局异常处理-->
     <bean class="com.mmall.common.SpringExceptionResolver"/>
+    <!--配置BeanNameViewResolver视图解析器-->
     <bean class="org.springframework.web.servlet.view.BeanNameViewResolver"/>
+    <!--json视图渲染-->
     <bean id="jsonView" class="org.springframework.web.servlet.view.json.MappingJackson2JsonView"/>
+    <!--配置InternalResourceViewResolver视图解析器-->
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix" value="/WEB-INF/views/"/>
         <property name="suffix" value=".jsp"/>

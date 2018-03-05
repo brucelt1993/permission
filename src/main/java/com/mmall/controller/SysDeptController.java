@@ -23,11 +23,20 @@ public class SysDeptController {
     @Resource
     private SysTreeSevice sysTreeSevice;
 
+    /**
+     * 进入部门主页
+     * @return
+     */
     @RequestMapping("/dept.page")
     public ModelAndView page() {
         return new ModelAndView("dept");
     }
 
+    /**
+     * 保存
+     * @param param
+     * @return
+     */
     @RequestMapping("/save.json")
     @ResponseBody
     public JsonData saveDept(DeptParam param) {
@@ -35,6 +44,10 @@ public class SysDeptController {
         return JsonData.success();
     }
 
+    /**
+     * 获取部门树
+     * @return
+     */
     @RequestMapping("/tree.json")
     @ResponseBody
     public JsonData tree() {
@@ -42,6 +55,11 @@ public class SysDeptController {
         return JsonData.success(dtoList);
     }
 
+    /**
+     * 更新
+     * @param param
+     * @return
+     */
     @RequestMapping("/update.json")
     @ResponseBody
     public JsonData updateDept(DeptParam param) {

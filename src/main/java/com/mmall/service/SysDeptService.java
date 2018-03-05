@@ -1,11 +1,13 @@
 package com.mmall.service;
 
 import com.google.common.base.Preconditions;
+import com.mmall.common.RequestHolder;
 import com.mmall.dao.SysDeptMapper;
 import com.mmall.exception.ParamException;
 import com.mmall.model.SysDept;
 import com.mmall.param.DeptParam;
 import com.mmall.util.BeanValidator;
+import com.mmall.util.IpUtil;
 import com.mmall.util.LevelUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,10 @@ public class SysDeptService {
     @Resource
     private SysDeptMapper sysDeptMapper;
 
+    /**
+     * 保存
+     * @param param
+     */
     public void save(DeptParam param) {
         BeanValidator.check(param);
         if(checkExist(param.getParentId(),param.getName(),param.getId())){
@@ -28,12 +34,16 @@ public class SysDeptService {
         SysDept dept = SysDept.builder().name(param.getName()).parentId(param.getParentId())
                 .seq(param.getSeq()).remark(param.getRemark()).build();
         dept.setLevel(LevelUtil.calculateLevel(getLevel(param.getParentId()),param.getParentId()));
-        dept.setOperator("system");//TODO:
-        dept.setOperatorIp("127.0.0.1");//TODO:
+        dept.setOperator(RequestHolder.getCurrentUser().getUsername());//TODO:
+        dept.setOperatorIp(IpUtil.getRemoteIp(RequestHolder.getCurrentRequest()));//TODO:
         dept.setOperatorTime(new Date());
         sysDeptMapper.insertSelective(dept);
     }
 
+    /**
+     * 更新操作
+     * @param param
+     */
     public void update(DeptParam param){
         BeanValidator.check(param);
         if(checkExist(param.getParentId(),param.getName(),param.getId())){
@@ -47,11 +57,17 @@ public class SysDeptService {
         SysDept after = SysDept.builder().id(param.getId()).name(param.getName()).parentId(param.getParentId())
                 .seq(param.getSeq()).remark(param.getRemark()).build();
         after.setLevel(LevelUtil.calculateLevel(getLevel(param.getParentId()),param.getParentId()));
-        after.setOperator("system-update");//TODO:
-        after.setOperatorIp("127.0.0.1");//TODO:
+        after.setOperator(RequestHolder.getCurrentUser().getUsername());//TODO:
+        after.setOperatorIp(IpUtil.getRemoteIp(RequestHolder.getCurrentRequest()));//TODO:
         after.setOperatorTime(new Date());
         updateWithChild(before,after);
     }
+
+    /**
+     * 批量更新子部门(如果涉及到更改)
+     * @param before
+     * @param after
+     */
     @Transactional
     private void updateWithChild(SysDept before,SysDept after){
         String newLevelPrefix = after.getLevel();
@@ -74,6 +90,12 @@ public class SysDeptService {
     private boolean checkExist(Integer parentId,String deptName,Integer deptId){
         return sysDeptMapper.countByNameAndParentId(parentId,deptName,deptId)>0;
     }
+
+    /**
+     * 根据deptId获取层级
+     * @param deptId
+     * @return
+     */
     private String getLevel(Integer deptId){
         SysDept dept = sysDeptMapper.selectByPrimaryKey(deptId);
         if(dept==null){

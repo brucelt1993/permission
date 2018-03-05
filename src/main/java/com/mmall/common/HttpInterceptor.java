@@ -9,6 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
+/**
+ * SpringMvc 请求拦截器
+ */
 @Slf4j
 public class HttpInterceptor extends HandlerInterceptorAdapter {
     private static final String START_TIME = "requestStartTime";
@@ -30,6 +33,7 @@ public class HttpInterceptor extends HandlerInterceptorAdapter {
         long end = System.currentTimeMillis();
         log.info("request finished. url:{},params:{}",url, JsonMapper.object2String(paramMap));
         log.info("request finished. url:{},cost:{} ms",url, end-start);
+        removeThreadLocalInfo();
     }
 
     @Override
@@ -37,5 +41,10 @@ public class HttpInterceptor extends HandlerInterceptorAdapter {
         String url = request.getRequestURI().toString();
         Map paramMap = request.getParameterMap();
         log.info("request complete. url:{},params:{}",url, JsonMapper.object2String(paramMap));
+        removeThreadLocalInfo();
+    }
+
+    public void removeThreadLocalInfo(){
+        RequestHolder.remove();
     }
 }

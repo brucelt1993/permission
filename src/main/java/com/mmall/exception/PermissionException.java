@@ -16,4 +16,8 @@ public class PermissionException extends RuntimeException {
     public PermissionException(Throwable cause) {
         super(cause);
     }
+
+    protected PermissionException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
 }

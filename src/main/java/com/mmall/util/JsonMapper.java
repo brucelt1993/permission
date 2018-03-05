@@ -8,6 +8,9 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.ser.impl.SimpleFilterProvider;
 import org.codehaus.jackson.type.TypeReference;
 
+/**
+ * Json工具类
+ */
 @Slf4j
 public class JsonMapper {
     private static ObjectMapper objectMapper = new ObjectMapper();
@@ -18,6 +21,13 @@ public class JsonMapper {
         objectMapper.setFilters(new SimpleFilterProvider().setFailOnUnknownId(false));
         objectMapper.setSerializationInclusion(JsonSerialize.Inclusion.NON_EMPTY);
     }
+
+    /**
+     * Object 转json
+     * @param src
+     * @param <T>
+     * @return
+     */
     public static <T> String object2String(T src){
         if(src==null){
             return null;
@@ -29,6 +39,14 @@ public class JsonMapper {
             return null;
         }
     }
+
+    /**
+     * String 转Object
+     * @param src
+     * @param typeReference
+     * @param <T>
+     * @return
+     */
     public static <T> T String2Obj(String src, TypeReference<T> typeReference){
         if(src==null || typeReference==null){
             return null;

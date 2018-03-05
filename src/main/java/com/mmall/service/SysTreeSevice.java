@@ -19,6 +19,11 @@ import java.util.List;
 public class SysTreeSevice {
     @Resource
     private SysDeptMapper sysDeptMapper;
+
+    /**
+     * 获取部门的树结构
+     * @return
+     */
     public List<DeptLevelDto> deptTree(){
         List<SysDept> deptList = sysDeptMapper.getAllDept();
         List<DeptLevelDto> dtoList = Lists.newArrayList();
@@ -33,6 +38,7 @@ public class SysTreeSevice {
         if(CollectionUtils.isEmpty(deptLevelList)){
             return Lists.newArrayList();
         }
+        //利用Multimap来存储形如---{String,List}类型的map
         Multimap<String,DeptLevelDto> levelDeptMap = ArrayListMultimap.create();
         List<DeptLevelDto> rootList = Lists.newArrayList();
         for(DeptLevelDto dto : deptLevelList){
