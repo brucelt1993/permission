@@ -1,7 +1,12 @@
 package com.mmall.model;
 
-import java.util.Date;
+import lombok.*;
 
+import java.util.Date;
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 public class SysRole {
     private Integer id;
 

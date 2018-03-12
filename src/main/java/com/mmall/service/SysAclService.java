@@ -55,7 +55,7 @@ public class SysAclService {
     }
 
     public boolean checkExist(int aclModuleId, String name, Integer id) {
-        return false;
+        return sysAclMapper.countByNameAndAclModuleId(aclModuleId, name, id) > 0;
     }
 
     public String generateCode() {

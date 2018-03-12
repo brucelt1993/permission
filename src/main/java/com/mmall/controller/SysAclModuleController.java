@@ -4,7 +4,7 @@ import com.mmall.common.JsonData;
 import com.mmall.dto.AclModuleLevelDto;
 import com.mmall.param.AclModuleParam;
 import com.mmall.service.SysAclModuleService;
-import com.mmall.service.SysTreeSevice;
+import com.mmall.service.SysTreeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,7 +21,7 @@ public class SysAclModuleController {
     @Resource
     private SysAclModuleService sysAclModuleService;
     @Resource
-    private SysTreeSevice sysTreeSevice;
+    private SysTreeService sysTreeSevice;
     @RequestMapping("/acl.page")
     public ModelAndView page() {
         return new ModelAndView("acl");

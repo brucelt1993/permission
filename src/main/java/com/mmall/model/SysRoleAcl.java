@@ -1,7 +1,15 @@
 package com.mmall.model;
 
-import java.util.Date;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
+import java.util.Date;
+@Builder
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class SysRoleAcl {
     private Integer id;
 

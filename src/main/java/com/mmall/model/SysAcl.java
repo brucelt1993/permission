@@ -1,15 +1,13 @@
 package com.mmall.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.Date;
 @ToString
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(of = {"id"})
 public class SysAcl {
     private Integer id;
 
