@@ -8,6 +8,7 @@ import com.mmall.service.SysTreeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -25,6 +26,7 @@ public class SysDeptController {
 
     /**
      * 进入部门主页
+     *
      * @return
      */
     @RequestMapping("/dept.page")
@@ -34,6 +36,7 @@ public class SysDeptController {
 
     /**
      * 保存
+     *
      * @param param
      * @return
      */
@@ -46,6 +49,7 @@ public class SysDeptController {
 
     /**
      * 获取部门树
+     *
      * @return
      */
     @RequestMapping("/tree.json")
@@ -57,6 +61,7 @@ public class SysDeptController {
 
     /**
      * 更新
+     *
      * @param param
      * @return
      */
@@ -64,6 +69,13 @@ public class SysDeptController {
     @ResponseBody
     public JsonData updateDept(DeptParam param) {
         sysDeptService.update(param);
+        return JsonData.success();
+    }
+
+    @RequestMapping("/delete.json")
+    @ResponseBody
+    public JsonData delete(@RequestParam("id") int id) {
+        sysDeptService.delete(id);
         return JsonData.success();
     }
 }
