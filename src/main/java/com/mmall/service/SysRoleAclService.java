@@ -2,10 +2,14 @@ package com.mmall.service;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.mmall.beans.LogType;
 import com.mmall.common.RequestHolder;
+import com.mmall.dao.SysLogMapper;
 import com.mmall.dao.SysRoleAclMapper;
+import com.mmall.model.SysLogWithBLOBs;
 import com.mmall.model.SysRoleAcl;
 import com.mmall.util.IpUtil;
+import com.mmall.util.JsonMapper;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,18 +23,21 @@ import java.util.Set;
 public class SysRoleAclService {
     @Resource
     private SysRoleAclMapper sysRoleAclMapper;
+    @Resource
+    private SysLogMapper sysLogMapper;
 
     public void changeRoleAcls(Integer roleId, List<Integer> aclIdList) {
-         List<Integer> orginAclIdList = sysRoleAclMapper.getAclIdListByRoleIdList(Lists.newArrayList(roleId));
-         if(orginAclIdList.size() == aclIdList.size()){
-             Set<Integer> orginAclIdSet = Sets.newHashSet(orginAclIdList);
-             Set<Integer> aclIdSet = Sets.newHashSet(aclIdList);
-             orginAclIdSet.removeAll(aclIdSet);
-             if(CollectionUtils.isEmpty(orginAclIdSet)){
-                 return;
-             }
-         }
+        List<Integer> orginAclIdList = sysRoleAclMapper.getAclIdListByRoleIdList(Lists.newArrayList(roleId));
+        if (orginAclIdList.size() == aclIdList.size()) {
+            Set<Integer> orginAclIdSet = Sets.newHashSet(orginAclIdList);
+            Set<Integer> aclIdSet = Sets.newHashSet(aclIdList);
+            orginAclIdSet.removeAll(aclIdSet);
+            if (CollectionUtils.isEmpty(orginAclIdSet)) {
+                return;
+            }
+        }
         updateRoleAcls(roleId, aclIdList);
+        saveRoleAclLog(roleId, orginAclIdList, aclIdList);
     }
 
     @Transactional
@@ -41,11 +48,23 @@ public class SysRoleAclService {
             return;
         }
         List<SysRoleAcl> roleAclList = Lists.newArrayList();
-        for(Integer aclId : aclIdList) {
+        for (Integer aclId : aclIdList) {
             SysRoleAcl roleAcl = SysRoleAcl.builder().roleId(roleId).aclId(aclId).operator(RequestHolder.getCurrentUser().getUsername())
                     .operatorIp(IpUtil.getRemoteIp(RequestHolder.getCurrentRequest())).operatorTime(new Date()).build();
             roleAclList.add(roleAcl);
         }
         sysRoleAclMapper.batchInsert(roleAclList);
+    }
+    private void saveRoleAclLog(int roleId, List<Integer> before, List<Integer> after) {
+        SysLogWithBLOBs sysLog = new SysLogWithBLOBs();
+        sysLog.setType(LogType.TYPE_ROLE_ACL);
+        sysLog.setTargetId(roleId);
+        sysLog.setOldValue(before == null ? "" : JsonMapper.object2String(before));
+        sysLog.setNewValue(after == null ? "" : JsonMapper.object2String(after));
+        sysLog.setOperator(RequestHolder.getCurrentUser().getUsername());
+        sysLog.setOperatorIp(IpUtil.getRemoteIp(RequestHolder.getCurrentRequest()));
+        sysLog.setOperatorTime(new Date());
+        sysLog.setStatus(1);
+        sysLogMapper.insertSelective(sysLog);
     }
 }

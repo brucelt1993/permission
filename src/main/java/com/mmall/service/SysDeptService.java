@@ -24,6 +24,8 @@ public class SysDeptService {
     private SysDeptMapper sysDeptMapper;
     @Resource
     private SysUserMapper sysUserMapper;
+    @Resource
+    private SysLogService sysLogService;
 
     /**
      * 保存
@@ -41,6 +43,7 @@ public class SysDeptService {
         dept.setOperatorIp(IpUtil.getRemoteIp(RequestHolder.getCurrentRequest()));//TODO:
         dept.setOperatorTime(new Date());
         sysDeptMapper.insertSelective(dept);
+        sysLogService.saveDeptLog(null,dept);
     }
 
     /**
@@ -64,6 +67,7 @@ public class SysDeptService {
         after.setOperatorIp(IpUtil.getRemoteIp(RequestHolder.getCurrentRequest()));//TODO:
         after.setOperatorTime(new Date());
         updateWithChild(before,after);
+        sysLogService.saveDeptLog(before,after);
     }
 
     /**

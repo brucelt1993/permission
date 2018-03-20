@@ -73,7 +73,7 @@ public class SysCoreService {
     public boolean isSuperAdmin(){
         SysUser sysUser =RequestHolder.getCurrentUser();
         if(sysUser.getMail().contains("admin") || "13535430871".equals(sysUser.getTelephone())){
-            return false;
+            return true;
         }
         return false;
     }

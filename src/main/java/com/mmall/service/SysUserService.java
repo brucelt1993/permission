@@ -24,6 +24,8 @@ import java.util.Set;
 public class SysUserService {
     @Resource
     private SysUserMapper sysUserMapper;
+    @Resource
+    private SysLogService sysLogService;
 
     /**
      * 保存
@@ -58,6 +60,7 @@ public class SysUserService {
         } else {
             log.info("发送邮件异常");
         }
+        sysLogService.saveUserLog(null, sysUser);
     }
 
     /**
@@ -82,6 +85,7 @@ public class SysUserService {
         after.setOperatorIp(IpUtil.getRemoteIp(RequestHolder.getCurrentRequest()));//TODO:
         after.setOperatorTime(new Date());
         sysUserMapper.updateByPrimaryKeySelective(after);
+        sysLogService.saveUserLog(before, after);
     }
 
     public boolean checkEmailExist(String mail, Integer userId) {
@@ -106,7 +110,7 @@ public class SysUserService {
         return PageResult.<SysUser>builder().build();
     }
 
-    public List<SysUser> getAll(){
+    public List<SysUser> getAll() {
         return sysUserMapper.getAll();
     }
 }
